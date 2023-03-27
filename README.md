@@ -21,4 +21,16 @@ Couple of examples:
 
 The Workout creator uses a Excel spreadsheet for defining scheduling workouts, describe workouts and workouttypes. The Excel spreadsheet has 3 obligatory worksheets called "Schedule", "Workout" and "workoutType", don't change the names of these 3 worksheets !
 
-The worksheet 
+The worksheet "Schedule" contains the following columns:
+  Date:         Date for scheduling the workout in your Garmin Connect Calendar
+  Workout:      Lookup field for a defined workout in the Workout worksheet
+  Comments:     Commenting your Workout, this comment is also visible in your Garmin Connect Workout. Max. 512 characters
+  
+The worksheet "Workout" contains the following columns:
+  Name:         Name of the workout, max. 80 characters
+  sportType:    Type of sport. Import to add also this sportType to the worksheet workoutType (explained hereunder)
+  Description:  The workout description based on the workout creator language as explained here above
+  
+The worksheet "workoutType" contains the following columns:
+  Name:         Short name of the workout type
+  Value:        Reference to the 
