@@ -33,4 +33,10 @@ The worksheet "Workout" contains the following columns:
   
 The worksheet "workoutType" contains the following columns:
   Name:         Short name of the workout type
-  Value:        Reference to the 
+  Value:        Reference to the Garmin Connect API definitions f.e. swimStrokeType, stepTypeId of sportTypeId. Access to the Garmin API documentation is only
+								granted to professional developers, so getting these values is only possible via reversed engineering. So define a workout with the appropiate
+								sport type, step type and/of swimstroke type. Export this workout to json format and open the downloaded file in a editor/viewer. Determine the
+								appropiate values for sportTypeId, stepTypeId or swimStrokeTypeId or other Id's and coupled workoutType
+	apiType:			definition of the Id type, f.e. sportTypeId or stepTypeId etc.
+	workoutType:	definition of the workoutType, also use reversed engineering to find out the appropiate values
+	Description:	Free description, is not used by the workout creator
