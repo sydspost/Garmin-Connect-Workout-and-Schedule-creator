@@ -2,6 +2,7 @@
 Create Garmin Connect workouts with a "turbo language" and schedule them.
 
 **Language**
+
 The Workouts creator uses the following "language" to define a workout
   0-9  defines distance or time, f.e. 100m or 15:30 minutes
   c    indicator hat the numbers before the "c" are calories, f.e. 100c means burn 100 calories with this workoutstep
@@ -25,6 +26,7 @@ Couple of examples:
   Pilates:  10r!WUP&SA + 00:10&3WWCF + 100c!COOL&FP
 
 **Excel sheet**
+
 The Workout creator uses a Excel spreadsheet for defining scheduling workouts, describe workouts and workouttypes. The Excel spreadsheet has 3 obligatory worksheets called "Schedule", "Workout" and "workoutType", don't change the names of these 3 worksheets !
 
 The worksheet "Schedule" contains the following columns:
@@ -49,6 +51,7 @@ The worksheet "workoutType" contains the following columns:
   Description:	Free description, is not used by the workout creator
 
 **Reversed engeneering a new workout type**
+
 If you want to add a new Sporttype, for example "Yoga", you can follow the following steps.
 1)  Create an Yoga workout in Garmin Connect, filled with your favorite trainingtypes as workout steps. Save it.
 2)  Download the workout to your desktop and open it with notepad
@@ -58,4 +61,5 @@ If you want to add a new Sporttype, for example "Yoga", you can follow the follo
 6)  
 
 **Known issues**
+
 Multisport workouts, like Duathlon of Triathlon ain't supported in Garmin Connect, add seperate workouts as work-arround
