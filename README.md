@@ -4,13 +4,16 @@ Create Garmin Connect workouts with a "turbo language" and schedule them.
 **Language**
 The Workouts creator uses the following "language" to define a workout
   0-9  defines distance or time, f.e. 100m or 15:30 minutes
-  m    indicator that de numbers before the "m" is a distance, f.e. 100m
-  :    indicator that de 2 numbers before and after the ":" are a time-definition, f.e. 15:30
+  c    indicator hat the numbers before the "c" are calories, f.e. 100c means burn 100 calories with this workoutstep
+  m    indicator that the numbers before the "m" is a distance, f.e. 100m
+  r    indicator that the number before the "r" is the number of itterations of a workoutstep, f.e. 10r means 10 push-ups
+  :    indicator that the 2 numbers before and after the ":" are a time-definition, f.e. 15:30
   Z    zone, f.e. Z0 for Zone zero
   *    indicator that the number after the "*" indicates the number of iterations of the repeat group
   !    indicator that the digits after the "!" indicate the Stroketype or Steptype, f.e. !SS is stroketype "Schoolslag" (dutch for breaststroke) 
        or !WUP for steptype 'Warming up'
   @    indicator that the digits after the "@" indicate a Zone, RPM or BPM, f.e. 100bpm or 80rpm
+  &    indicator that the digits after "&" indicate an excercise, f.e. push-up
   (    start of a repeat group, f.e. (100m!SS + 00:20!RUST) * 2 (RUST is dutch for Rest)
   )    end of a repeat group
   +    next workoutstep
@@ -19,6 +22,7 @@ Couple of examples:
   Swimming: 300m!ES@Z1 + (200m!BC@Z1 + 50m!SS + 00:20!RUST)*4 + (25m!BC@Z3)*6 + 250m!SS
   Running:  15:00!WUP + (05:00@Z2 + 03:00!RUST) * 4 + 10:00@Z1 + (01:00@Z3 + 01:00!RUST) * 3 + 15:00!COOL
   Cycling:  90:00@Z1@100rpm
+  Pilates:  10r!WUP&SA + 00:10&3WWCF + 100c!COOL&FP
 
 **Excel sheet**
 The Workout creator uses a Excel spreadsheet for defining scheduling workouts, describe workouts and workouttypes. The Excel spreadsheet has 3 obligatory worksheets called "Schedule", "Workout" and "workoutType", don't change the names of these 3 worksheets !
@@ -39,8 +43,9 @@ The worksheet "workoutType" contains the following columns:
 		            granted to professional developers, so getting these values is only possible via reversed engineering. So define a workout with the appropiate
 		            sport type, step type and/of swimstroke type. Export this workout to json format and open the downloaded file in a editor/viewer. Determine the
 		            appropiate values for sportTypeId, stepTypeId or swimStrokeTypeId or other Id's and coupled workoutType
-  apiType:		  definition of the Id type, f.e. sportTypeId or stepTypeId etc.
-  workoutType:	definition of the workoutType, also use reversed engineering to find out the appropiate values
+  apiType:		    definition of the Id type, f.e. sportTypeId or stepTypeId etc.
+  workoutType:	definition of the workoutType or excercise, also use reversed engineering to find out the appropiate values
+  category:	category of the excercise, also use reversed engineering to find out the appropiate values
   Description:	Free description, is not used by the workout creator
 
 **Reversed engeneering a new workout type**
