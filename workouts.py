@@ -6,14 +6,15 @@ from datetime import datetime
 import argparse
 import os
 import time
+import secrets
 
 # Argument Parser
 argParser = argparse.ArgumentParser(description='turbo Workout generator')
 argParser.add_argument('--XLSX_filename', help='Specify input XLSX filename, default is "workoutschedule.xlsx"', default='workoutschedule.xlsx', dest='input')
 argParser.add_argument('--output_dir', help='Specify output dir for JSON workout files, default is current directory', default=os.getcwd(), dest='output')
 argParser.add_argument('-v', '--verbose', action='store_true')
-argParser.add_argument('-u', '--username', help='Garmin Connect username', default="sydspost@gmail.com")
-argParser.add_argument('-p', '--password', help='Garmin Connect password', default="X!do2019")
+argParser.add_argument('-u', '--username', help='Garmin Connect username', default=secrets.username)	# change secrets.py and add your Garmin connect username
+argParser.add_argument('-p', '--password', help='Garmin Connect password', default=secrets.password)	# change secrets.py and add your Garmin connect password
 argParser.add_argument('-n', '--noschedule', help='Don \'t add workouts to calendar')
 argParser.add_argument('-w', '--noworkout', help='Don \'t add workouts to Garmin Connect (implicit --n --noschedule)')
 args = argParser.parse_args()
@@ -136,11 +137,13 @@ def defParseWorkout(workout, sportTypeId):	# Build body of workout JSON file
     time = ""
     zone = ""
     repeat = ""
+    repeatExcercise = ""
     stepType = ""
     strokeType = ""
-    rpmOrbpm = ""
+    kgrOrrpmOrbpm = ""
     rpm = 0
     bpm = 0
+    kgr = 0
     stepOrder = 0
     childStepId = 0
     numberOfIterations = 0
@@ -148,22 +151,45 @@ def defParseWorkout(workout, sportTypeId):	# Build body of workout JSON file
     workoutTargetTypeKey = "no.target"
     strokeTypeId = "0"
     strokeTypeKey = ""
-    distanceOrtimeOrzoneOrrepeat = ""  
+    distanceOrtimeOrzoneOrrepeatOrcalories = ""
+    excercise = ""
+    calories = ""
+    conditionTypeId = ""
+    conditionTypeKey = ""
+    endConditionValue = ""
+    excerciseName = ""
+    category = ""
 
     # Walk through workout Description
     while (element < len(workout)):
         match workout[element]:
             case '0'| '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9':
-                distanceOrtimeOrzoneOrrepeat = distanceOrtimeOrzoneOrrepeat + workout[element]
-            case 'm':					# OK, it's a distance
-                distance = distanceOrtimeOrzoneOrrepeat
+                distanceOrtimeOrzoneOrrepeatOrcalories = distanceOrtimeOrzoneOrrepeatOrcalories + workout[element]
+            case 'c':					# OK, it's a calories based excercise
+                calories = distanceOrtimeOrzoneOrrepeatOrcalories
                 time = ""
-                distanceOrtimeOrzoneOrrepeat = ""
+                repeatExcercise = ""
+                distance = ""
+                distanceOrtimeOrzoneOrrepeatOrcalories = ""
+            case 'm':					# OK, it's a distance
+                distance = distanceOrtimeOrzoneOrrepeatOrcalories
+                time = ""
+                repeatExcercise = ""
+                calories = ""
+                distanceOrtimeOrzoneOrrepeatOrcalories = ""
+            case 'r':					# OK, it's a distance
+                repeatExcercise = distanceOrtimeOrzoneOrrepeatOrcalories
+                time = ""
+                distance = ""
+                calories = ""
+                distanceOrtimeOrzoneOrrepeatOrcalories = ""
             case ':':					# OK, it's a time
-                time = distanceOrtimeOrzoneOrrepeat + ":" + workout[element + 1] + workout[element + 2]
+                time = distanceOrtimeOrzoneOrrepeatOrcalories + ":" + workout[element + 1] + workout[element + 2]
                 element += 2
                 distance = ""
-                distanceOrtimeOrzoneOrrepeat = ""
+                repeatExcercise = ""
+                calories = ""
+                distanceOrtimeOrzoneOrrepeatOrcalories = ""
             case 'Z':					# OK, it's a zone
                 zone = workout[element + 1]
                 element += 1
@@ -175,7 +201,7 @@ def defParseWorkout(workout, sportTypeId):	# Build body of workout JSON file
                     element += 1
             case '!':					# OK, it's a step- or stroketype
                 element += 1
-                while (element < len(workout) and workout[element] != "+" and workout[element] != "@"
+                while (element < len(workout) and workout[element] != "+" and workout[element] != "@" and workout[element] != "&"
                        and workout[element] != ")" and workout[element] != "#"):
                     if (sportTypeId != "4"):	# If sportTypeId <> Swimming, then it's a stepType
                         stepType += workout[element]
@@ -186,20 +212,28 @@ def defParseWorkout(workout, sportTypeId):	# Build body of workout JSON file
                             strokeType = ""
                     element += 1
                 element -= 1
-            case '@':					# OK, it's a Zone, RPM or BPM, Zone is ignored because it's already accessed under 'Z'
+            case '@':					# OK, it's a Zone, Weight, RPM or BPM, Zone is ignored because it's already accessed under 'Z'
                 if (workout[element + 1] != "Z"):
                     element += 1
-                    while (element < len(workout) and workout[element] != "+" and workout[element] != "#"):
-                        rpmOrbpm += workout[element]
+                    while (element < len(workout) and workout[element] != "+" and workout[element] != "#" and workout[element] != "@"):
+                        kgrOrrpmOrbpm += workout[element]
                         element += 1
-                    match rpmOrbpm[-3:]:
+                    match kgrOrrpmOrbpm[-3:]:
+                        case "kgr":		# It's weight
+                            kgr = int(kgrOrrpmOrbpm[:len(kgrOrrpmOrbpm)-3])
                         case "rpm":		# It's RPM
-                            rpm = int(rpmOrbpm[:len(rpmOrbpm)-3])
+                            rpm = int(kgrOrrpmOrbpm[:len(kgrOrrpmOrbpm)-3])
                         case "bpm":		# It's BPM
-                            bpm = int(rpmOrbpm[:len(rpmOrbpm)-3])
+                            bpm = int(kgrOrrpmOrbpm[:len(kgrOrrpmOrbpm)-3])
                             
-                    rpmOrbpm = ""                    
+                    kgrOrrpmOrbpm = ""                    
                     element -= 1
+            case '&':					# OK, it's a excercise
+                element += 1
+                while (element < len(workout) and workout[element] != "+" and workout[element] != "#" and workout[element] != "@"):
+                    excercise += workout[element]
+                    element += 1
+                element -= 1
             case '(':					# It's the start of a repeatgroup
                 childStepId += 1
                 stepOrder += 1
@@ -233,22 +267,35 @@ def defParseWorkout(workout, sportTypeId):	# Build body of workout JSON file
                     conditionTypeKey = "lap.button"
                     endConditionValue = "0.0"
 
-                if (distance != ""):	# Distance or Time ?
+                if (distance != ""):	# Distance, Repeat Excercise, Time or Calories?
                     conditionTypeId = "3"
                     conditionTypeKey = "distance"
                     endConditionValue = '{0:.1f}'.format(float(distance))                 
-                else:					# Time
+                elif (time != ""):		# Time
                     conditionTypeId = "2"
                     conditionTypeKey = "time"
                     t=int(time[0:2])*60 + int(time[3:5])
                     endConditionValue = '{:.1f}'.format(float(t))
+                elif (calories != ""):	# Calories
+                    conditionTypeId = "4"
+                    conditionTypeKey = "calories"
+                    endConditionValue = '{0:.1f}'.format(float(calories))
+                elif (repeatExcercise != ""): # Repeat Excercise
+                    conditionTypeId = "10"
+                    conditionTypeKey = "reps"
+                    endConditionValue = '{0:.1f}'.format(float(repeatExcercise))
+                else:
+                    conditionTypeId = "1"
+                    conditionTypeKey = "lap.button"
+                    endConditionValue = "null"
                     
+                   
                 if (stepType == "RUST"):# Rest
                     conditionTypeId = "8"
                     conditionTypeKey = "fixed.rest"
                     t=int(time[0:2])*60 + int(time[3:5])
                     endConditionValue = '{:.1f}'.format(float(t))
-                    
+                
                 stepOrder += 1
                 
                 data += """                       "type": "ExecutableStepDTO",\n"""
@@ -335,14 +382,28 @@ def defParseWorkout(workout, sportTypeId):	# Build body of workout JSON file
                     data += """                               "strokeTypeKey": """ + "\"" + strokeTypeKey + "\",\n"
                     data += """                               "displayOrder": 1\n"""
                     data += """                       },\n"""
+                
+                if (sportTypeId in ["5","6","7","8","9"] and stepType != "RUST"): # Kracht, Cardio, Yoga, Pilates, HIIT
+                    excerciseName, category = lookupExcerciseName(excercise)
+                    print(excercise, excerciseName, category)
+                    data += """                       "category": """ + "\"" + category + "\",\n"
+                    data += """                       "exerciseName": """ + "\"" + excerciseName + "\",\n"
                     
+                if (kgr != 0 and stepType != "RUST"):
+                    data += """                       "weightValue": """ + '{:.1f}'.format(float(kgr)) + ",\n"
+                    data += """                       "weightUnit": {\n"""
+                    data += """                            "unitId": 8,\n"""
+                    data += """                            "unitKey": "kilogram",\n"""
+                    data += """                            "factor": 1000.0\n"""
+                    data += """                       },\n"""                   
+
                 data += """                       "equipmentType": {\n"""
                 data += """                               "equipmentTypeId": 0,\n"""
                 data += """                               "displayOrder": 0\n"""
                 data += """                       }\n"""
 
                 if (workout[element] == '+'):					# Finish for next Workoutstep
-                    if (sportTypeId == "4" and numberOfIterations == 0):
+                    if (sportTypeId in ["4"] and numberOfIterations == 0):
                         stepOrder += 1
                         data += """               }, {\n"""
                         data += """               "type": "ExecutableStepDTO",\n"""
@@ -373,6 +434,16 @@ def defParseWorkout(workout, sportTypeId):	# Build body of workout JSON file
                 zone = ""
                 strokeTypeId = "0"
                 strokeTypeKey = ""
+                distance = ""
+                repeatExcercise = ""
+                time = ""
+                calories = ""
+                conditionTypeId = ""
+                conditionTypeKey = ""
+                endConditionValue = ""
+                excercise = ""
+                excerciseName = ""
+                category = ""
                 
                 # Finish repeatgroup
                 if (workout[element] == ')'):
@@ -451,7 +522,7 @@ def lookupStepType(stepType):				# Lookup StepType in worksheet workoutType
         if (stepTypeRow[2].value == "stepTypeId" and stepTypeRow[0].value == stepType):
             stepTypeId = str(stepTypeRow[1].value)
             stepTypeKey = "\"" + stepTypeRow[3].value + "\""
-            stepTypeDescription = "\"" + stepTypeRow[4].value + "\""
+            stepTypeDescription = "\"" + stepTypeRow[5].value + "\""
             
     return (stepTypeId, stepTypeKey, stepTypeDescription)
 
@@ -466,10 +537,21 @@ def lookupStrokeType(strokeType):			# Lookup StrokeType in worksheet workoutType
             
     return (strokeTypeId, strokeTypeKey)
 
+def lookupExcerciseName(excerciseName):			# Lookup excercise in worksheet workoutType
+    workoutType = ""
+    category = ""
+    
+    for excerciseNameRow in wsWorkoutType:
+        if (excerciseNameRow[2].value == "excerciseName" and excerciseNameRow[0].value == excerciseName):
+            workoutType = excerciseNameRow[3].value
+            category = excerciseNameRow[4].value
+            
+    return (workoutType, category)
 
 # Loop: Iterate thru Scheduled workouts
 for row in range (2, wsSchedule.max_row+1):
-    defWorkout(wsSchedule.cell(row=row, column=2).value, wsSchedule.cell(row=row, column=3).value)
+    if (wsSchedule.row_dimensions[row].hidden == False):
+        defWorkout(wsSchedule.cell(row=row, column=2).value, wsSchedule.cell(row=row, column=3).value)
 
     if (data != ""):
         if (args.verbose): print(data)
@@ -491,7 +573,7 @@ for row in range (2, wsSchedule.max_row+1):
                 pass
         
         # Assign workout to calendar
-        if (not args.noschedule or not args.noworkout):
+        if ((not args.noschedule) or (not args.noworkout)):
             wait_until(Text("Copyright").exists, 10)
             time.sleep(2)
             driver.find_element(By.LINK_TEXT, 'Voeg toe aan agenda').click()
