@@ -57,11 +57,19 @@ Couple of examples:
 - Garmin Connect account
 - Chrome 111.0.5563.147 or higher
 
+**Depends on**
+OpenPyXL: A python library to read/write Excel, https://pypi.org/project/openpyxl/
+GarminConnect: Python 3 API wrapper for Garmin Connect,  https://github.com/cyberjunky/python-garminconnect
+Helium: Web automation, https://github.com/mherrmann/selenium-python-helium
+
+**Install**
+pip install -r requirements.txt
+
 **Chrome extension "Share your Garmin Connect workout"**
 Uploading and scheduling a workout depends on the Chrome extension Share your Garmin Connect workout (https://chrome.google.com/webstore/detail/share-your-garmin-connect/kdpolhnlnkengkmfncjdbfdehglepmff). The in this repository included crx file can be outdated. In that case you can easily download and save the latest version of the extension as following:
 - Install the Chrome extension "Share your Garmin Connect workout"
 - Follow the steps of method 1 as described on https://techpp.com/2022/08/22/how-to-download-and-save-chrome-extension-as-crx/
-- Copy the latest .crx file to your workouts map
+- Copy the .crx file to your workouts map
 
 **Secrets.py**
 
