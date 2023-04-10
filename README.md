@@ -51,6 +51,18 @@ Couple of examples:
 -n, --noschedule Don \'t add workouts to calendar<br>
 -w, --noworkout  Don \'t add workouts to Garmin Connect (implicit --n --noschedule)<br>
 
+**Prerequisites**
+
+- Python 3.10.7 or higher
+- Garmin Connect account
+- Chrome 111.0.5563.147 or higher
+
+**Chrome extension "Share your Garmin Connect workout"**
+Uploading and scheduling a workout depends on the Chrome extension Share your Garmin Connect workout (https://chrome.google.com/webstore/detail/share-your-garmin-connect/kdpolhnlnkengkmfncjdbfdehglepmff). The in this repository included crx file can be outdated. In that case you can easily download and save the latest version of the extension as following:
+- Install the Chrome extension "Share your Garmin Connect workout"
+- Follow the steps of method 1 as described on https://techpp.com/2022/08/22/how-to-download-and-save-chrome-extension-as-crx/
+- Copy the latest .crx file to your workouts map
+
 **Secrets.py**
 
 You can add your Garmin Connect user credentials to secrets.py
@@ -100,6 +112,6 @@ If you want to add a new Sporttype, for example "Yoga", you can follow the follo
 4)  Open https://jsonlint.com/ and paste the text, click on "Validate JSON". JSONLint tides and validates the messy JSON code.
 5)  Search for sportTypeId. In this example the sportTypeId is "7" and the sportTypeKey = "yoga"
 
-**Known issues**
+**Known limitations**
 
 Multisport workouts, like Duathlon of Triathlon ain't supported in Garmin Connect, add seperate workouts as work-arround
