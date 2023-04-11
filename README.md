@@ -97,7 +97,7 @@ The worksheet "Schedule" contains the following columns:
 The worksheet "Workout" contains the following columns:
 
   Name:         Name of the workout, max. 80 characters<br>
-  sportType:    Type of sport. Import to add also this sportType to the worksheet workoutType (explained hereunder)<br>
+  sportType:    Type of sport. Important to add also this sportType to the worksheet workoutType (explained hereunder)<br>
   Description:  The workout description based on the workout creator language as explained here above<br>
   
 The worksheet "workoutType" contains the following columns:
