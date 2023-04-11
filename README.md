@@ -65,6 +65,11 @@ Helium: Web automation, https://github.com/mherrmann/selenium-python-helium
 **Install**
 pip install -r requirements.txt
 
+Optional: Create an executable of the workouts.py script
+
+pip install pyinstaller
+pyinstaller --onefile workouts.py
+
 **Chrome extension "Share your Garmin Connect workout"**
 Uploading and scheduling a workout depends on the Chrome extension Share your Garmin Connect workout (https://chrome.google.com/webstore/detail/share-your-garmin-connect/kdpolhnlnkengkmfncjdbfdehglepmff). The in this repository included crx file can be outdated. In that case you can easily download and save the latest version of the extension as following:
 - Install the Chrome extension "Share your Garmin Connect workout"
