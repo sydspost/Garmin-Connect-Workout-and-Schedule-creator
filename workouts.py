@@ -385,7 +385,6 @@ def defParseWorkout(workout, sportTypeId):	# Build body of workout JSON file
                 
                 if (sportTypeId in ["5","6","7","8","9"] and stepType != "RUST"): # Kracht, Cardio, Yoga, Pilates, HIIT
                     excerciseName, category = lookupExcerciseName(excercise)
-                    print(excercise, excerciseName, category)
                     data += """                       "category": """ + "\"" + category + "\",\n"
                     data += """                       "exerciseName": """ + "\"" + excerciseName + "\",\n"
                     
