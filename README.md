@@ -27,7 +27,7 @@ The Workouts creator uses the following "language" to define a workout:
   \*&nbsp;&nbsp;&nbsp;&nbsp;indicator that the number after the "*" indicates the number of iterations of the repeat group<br>
   !&nbsp;&nbsp;&nbsp;&nbsp;indicator that the digits after the "!" indicate the Stroketype or Steptype, f.e. !SS is stroketype "Schoolslag" (dutch for breaststroke)<br> 
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or !WUP for steptype 'Warming up'<br>
-  @&nbsp;&nbsp;&nbsp;&nbsp;indicator that the digits after the "@" indicate a Zone, RPM or BPM, f.e. 100bpm or 80rpm<br>
+  @&nbsp;&nbsp;&nbsp;&nbsp;indicator that the digits after the "@" indicate a Zone, KGR (Weight), RPM or BPM, f.e. 7kgr, 100bpm or 80rpm<br>
   &&nbsp;&nbsp;&nbsp;&nbsp;indicator that the digits after "&" indicate an excercise, f.e. push-up<br>
   (&nbsp;&nbsp;&nbsp;&nbsp;start of a repeat group, f.e. (100m!SS + 00:20!RUST) * 2 (RUST is dutch for Rest)<br>
   )&nbsp;&nbsp;&nbsp;&nbsp;end of a repeat group<br>
